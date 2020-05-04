@@ -1,0 +1,34 @@
+body {
+  max-width: 100%;
+  background-color: lightgray;
+}
+
+.container {
+  margin-top: 10px;
+  background-color: white;
+}
+input {
+  width: 100%;
+  text-align: center;
+  height: 100%;
+}
+#funcao_ca,
+#funcao_mg {
+  margin: 2px;
+  font-size: 10px;
+}
+
+label {
+  font-size: 10px;
+}
+table {
+  font-size: 9px;
+}
+
+th {
+  text-align: center;
+}
+
+.center {
+  text-align: center;
+}
