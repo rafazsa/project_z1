@@ -16,18 +16,19 @@
   </head>
   <body>
     <div class="wrapper container shadow p-3 mb-5 bg-white rounded">
-      <h3>Calcario</h3>
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="center">CALCÁRIO</h1>
+        </div>
+      </div>
       <div class="row">
         <div class="col-sm-3">
           <table class="table">
             <thead class="thead-dark">
               <tr>
-                <th colspan="3">Quanto sobe 1000kg</th>
-              </tr>
-              <tr>
                 <th scope="col">Calcário</th>
-                <th scope="col">CaO</th>
-                <th scope="col">Mgo</th>
+                <th scope="col">CaO / 1000</th>
+                <th scope="col">Mgo / 1000</th>
               </tr>
             </thead>
             <tbody>
@@ -49,17 +50,17 @@
           </table>
         </div>
 
-        <div class="col-sm-7">
+        <div class="col-sm-9">
           <table class="table">
             <thead class="thead-dark">
               <tr>
                 <th scope="col">Calcário</th>
-                <th scope="col">Ca</th>
-                <th scope="col">Mg</th>
-                <th scope="col">PRNT</th>
-                <th scope="col">Acréscimo de Ca</th>
-                <th scope="col">Acréscimo de Mg</th>
-                <th scope="col">Acréscimo de PN</th>
+                <th scope="col">Ca %</th>
+                <th scope="col">Mg %</th>
+                <th scope="col">PRNT %</th>
+                <th scope="col">Acréscimo de Ca %</th>
+                <th scope="col">Acréscimo de Mg %</th>
+                <th scope="col">Acréscimo de PN %</th>
               </tr>
             </thead>
             <tbody>
@@ -83,6 +84,39 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="input-group row align-items-center">
+            <label
+              style="margin-bottom: 0rem !important;"
+              class="col-sm-3"
+              for="funcao_ca"
+              ><b>Função Ca</b></label
+            >
+            <input
+              class="col-sm-4"
+              type="text"
+              name="funcao_ca"
+              id="funcao_ca"
+            />
+          </div>
+          <div class="input-group row align-items-center">
+            <label
+              style="margin-bottom: 0rem !important;"
+              class="col-sm-3"
+              for="funcao_ca"
+              ><b>Função Mg</b></label
+            >
+            <input
+              class="col-sm-4"
+              type="text"
+              name="funcao_mg"
+              id="funcao_mg"
+            />
+          </div>
         </div>
       </div>
     </div>
