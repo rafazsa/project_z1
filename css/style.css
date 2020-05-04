@@ -1,0 +1,19 @@
+body {
+  max-width: 100%;
+  background-color: lightgray;
+}
+
+.container {
+  margin-top: 10px;
+  background-color: white;
+}
+input {
+  width: 100%;
+}
+
+table {
+  font-size: 9px;
+}
+th {
+  text-align: center;
+}
