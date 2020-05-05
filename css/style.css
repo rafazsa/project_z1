@@ -45,3 +45,11 @@ td {
 .feasible {
   background-color: rgba(81, 255, 0, 0.179);
 }
+
+.circle {
+  margin-left: 70px;
+  height: 30px;
+  max-width: 10px;
+  background-color: rgba(81, 255, 0, 0.179);
+  border-radius: 50%;
+}

@@ -205,10 +205,16 @@ function addSolverResults() {
 
     if (feasible) row.className += " feasible";
 
-    row.insertCell().innerHTML = alvo_cao.toFixed(2);
-    row.insertCell().innerHTML = alvo_mgo.toFixed(2);
-    row.insertCell().innerHTML = a.toFixed(4);
-    row.insertCell().innerHTML = b.toFixed(4);
+    if (row.cells[1].innerHTML == alvo_cao.toFixed(2))
+      row.insertCell().innerHTML = `<b>${alvo_cao.toFixed(2)}</b>`;
+    else row.insertCell().innerHTML = alvo_cao.toFixed(2);
+
+    if (row.cells[2].innerHTML == alvo_mgo.toFixed(2))
+      row.insertCell().innerHTML = `<b>${alvo_mgo.toFixed(2)}</b>`;
+    else row.insertCell().innerHTML = alvo_mgo.toFixed(2);
+
+    row.insertCell().innerHTML = `<b>${a.toFixed(4)}</b>`;
+    row.insertCell().innerHTML = `<b>${b.toFixed(4)}</b>`;
     row.insertCell().innerHTML = ((a / prnt_a) * 1000).toFixed(0);
     row.insertCell().innerHTML = ((b / prnt_b) * 1000).toFixed(0);
   }
