@@ -1,79 +1,144 @@
-const caoA = 0.3923;
-const mgoA = 0.3577;
-const caoB = 0.6863;
-const mgoB = 0.0637;
+const button_calcular = document.querySelector("button");
 
-const funcao_ca = 1.7867992;
-const funcao_mg = 2.4832748;
+// Carrega todos os inputs da pagina
+updateAll();
 
-const calcario = {
-  A: {
-    Ca: 29,
-    Mg: 19,
-    PRNT: 75,
-    acrescimoCa: 0.517592,
-    acrescimoMg: 0.471822,
-    PN: 98.64,
-  },
-  B: {
-    Ca: 45,
-    Mg: 3,
-    PRNT: 75,
-    acrescimoCa: 0.80316,
-    acrescimoMg: 0.074498,
-    PN: 87.77,
-  },
+// _______________ Eventos ______________
+button_calcular.onclick = () => {
+  execSolve();
 };
 
-const input_funcao_ca = document.querySelector('input[name="funcao_ca"]');
-const input_funcao_mg = document.querySelector('input[name="funcao_mg"]');
+document.querySelectorAll("input").forEach((el) => {
+  el.onchange = () => updateAll();
+});
 
-const input_cao_a = document.querySelector("input[name='cao_a']");
-const input_cao_b = document.querySelector("input[name='cao_b']");
-const input_mgo_a = document.querySelector("input[name='mgo_a']");
-const input_mgo_b = document.querySelector("input[name='mgo_b']");
+// _______________ Funções ___________
+function execSolve(delta_cao, delta_mgo) {
+  const solver = window.solver;
 
-const input_ca_a = document.querySelector('input[name="ca_a"]');
-const input_mg_a = document.querySelector('input[name="mg_a"]');
-const input_prnt_a = document.querySelector('input[name="prnt_a"]');
-const input_acrescimoCa_a = document.querySelector(
-  'input[name="acrescimo_ca_a"]'
-);
-const input_acrescimoMg_a = document.querySelector(
-  'input[name="acrescimo_mg_a"]'
-);
-const input_pn_a = document.querySelector('input[name="acrescimo_pn_a"]');
+  const cao_a = document.querySelector("input[name='cao_a']").value;
+  const mgo_a = document.querySelector("input[name='mgo_a']").value;
 
-const input_ca_b = document.querySelector('input[name="ca_b"]');
-const input_mg_b = document.querySelector('input[name="mg_b"]');
-const input_prnt_b = document.querySelector('input[name="prnt_b"]');
-const input_acrescimoCa_b = document.querySelector(
-  'input[name="acrescimo_ca_b"]'
-);
-const input_acrescimoMg_b = document.querySelector(
-  'input[name="acrescimo_mg_b"]'
-);
-const input_pn_b = document.querySelector('input[name="acrescimo_pn_b"]');
+  const cao_b = document.querySelector("input[name='cao_b']").value;
+  const mgo_b = document.querySelector("input[name='mgo_b']").value;
 
-input_funcao_ca.value = funcao_ca;
-input_funcao_mg.value = funcao_mg;
+  model = {
+    optimize: { aplicar_a: "max", aplicar_b: "max" },
+    opType: "max",
+    constraints: {
+      alvo_mgo: { equal: delta_mgo },
+      alvo_cao: { equal: delta_cao },
+    },
+    variables: {
+      aplicar_a: {
+        aplicar_a: 1,
+        alvo_cao: cao_a,
+        alvo_mgo: mgo_a,
+      },
+      aplicar_b: {
+        aplicar_b: 1,
+        alvo_cao: cao_b,
+        alvo_mgo: mgo_b,
+      },
+    },
+  };
+  const result = solver.Solve(model);
 
-input_cao_a.value = caoA;
-input_cao_b.value = caoB;
+  const { feasible } = result.midpoint;
 
-input_mgo_a.value = mgoA;
-input_mgo_b.value = mgoB;
+  // Se existir uma resposta ótima
+  if (feasible) {
+    const a = result.midpoint.aplicar_a;
+    const b = result.midpoint.aplicar_b;
+    console.log(`A: ${a} | B: ${b}`);
+  } else {
+    const a = result.ranges.aplicar_a.min;
+    const b = result.ranges.aplicar_b.min;
+    console.log(`A: ${a} | B: ${b}`);
+  }
+}
 
-input_ca_a.value = calcario.A.Ca;
-input_mg_a.value = calcario.A.Mg;
-input_prnt_a.value = calcario.A.PRNT;
-input_acrescimoCa_a.value = calcario.A.acrescimoCa;
-input_acrescimoMg_a.value = calcario.A.acrescimoMg;
-input_pn_a.value = calcario.A.PN;
+function updateAll() {
+  const input_cao_a = document.querySelector("input[name='cao_a']");
+  const input_cao_b = document.querySelector("input[name='cao_b']");
+  const input_mgo_a = document.querySelector("input[name='mgo_a']");
+  const input_mgo_b = document.querySelector("input[name='mgo_b']");
 
-input_ca_b.value = calcario.B.Ca;
-input_mg_b.value = calcario.B.Mg;
-input_prnt_b.value = calcario.B.PRNT;
-input_acrescimoCa_b.value = calcario.B.acrescimoCa;
-input_acrescimoMg_b.value = calcario.B.acrescimoMg;
-input_pn_b.value = calcario.B.PN;
+  const input_ca_a = document.querySelector('input[name="ca_a"]');
+  const input_mg_a = document.querySelector('input[name="mg_a"]');
+  const input_prnt_a = document.querySelector('input[name="prnt_a"]');
+  const input_acrescimoCa_a = document.querySelector(
+    'input[name="acrescimo_ca_a"]'
+  );
+  const input_acrescimoMg_a = document.querySelector(
+    'input[name="acrescimo_mg_a"]'
+  );
+  const input_pn_a = document.querySelector('input[name="pn_a"]');
+
+  const input_ca_b = document.querySelector('input[name="ca_b"]');
+  const input_mg_b = document.querySelector('input[name="mg_b"]');
+  const input_prnt_b = document.querySelector('input[name="prnt_b"]');
+  const input_acrescimoCa_b = document.querySelector(
+    'input[name="acrescimo_ca_b"]'
+  );
+  const input_acrescimoMg_b = document.querySelector(
+    'input[name="acrescimo_mg_b"]'
+  );
+  const input_pn_b = document.querySelector('input[name="pn_b"]');
+  const input_funcao_ca = document.querySelector("#funcao_ca");
+  const input_funcao_mg = document.querySelector("#funcao_mg");
+
+  const funcao_ca = parseFloat(input_funcao_ca.value) || 1.784799244;
+  const funcao_mg = parseFloat(input_funcao_mg.value) || 2.483274779;
+  const Ca_a = parseFloat(input_ca_a.value) || 0.29;
+  const Mg_a = parseFloat(input_mg_a.value) || 0.19;
+  const Ca_b = parseFloat(input_ca_b.value) || 0.45;
+  const Mg_b = parseFloat(input_mg_b.value) || 0.03;
+
+  const calcario = {
+    A: {
+      Ca: Ca_a,
+      Mg: Mg_a,
+      PRNT: 0.75,
+      acrescimoCa: Ca_a * funcao_ca,
+      acrescimoMg: Mg_a * funcao_mg,
+      PN: 0.9864,
+    },
+    B: {
+      Ca: Ca_b,
+      Mg: Mg_b,
+      PRNT: 0.75,
+      acrescimoCa: Ca_b * funcao_ca,
+      acrescimoMg: Mg_b * funcao_mg,
+      PN: 0.8777,
+    },
+  };
+  const cao_a = (calcario.A.PRNT / calcario.A.PN) * calcario.A.acrescimoCa;
+  const mgo_a = (calcario.A.PRNT / calcario.A.PN) * calcario.A.acrescimoMg;
+  const cao_b = (calcario.B.PRNT / calcario.B.PN) * calcario.B.acrescimoCa;
+  const mgo_b = (calcario.B.PRNT / calcario.B.PN) * calcario.B.acrescimoMg;
+
+  input_funcao_ca.value = funcao_ca;
+  input_funcao_mg.value = funcao_mg;
+  input_cao_a.value = cao_a.toFixed(2);
+  input_cao_b.value = cao_b.toFixed(2);
+
+  input_mgo_a.value = mgo_a.toFixed(2);
+  input_mgo_b.value = mgo_b.toFixed(2);
+
+  input_ca_a.value = calcario.A.Ca.toFixed(2);
+  input_mg_a.value = calcario.A.Mg.toFixed(2);
+  input_prnt_a.value = calcario.A.PRNT.toFixed(2);
+  input_acrescimoCa_a.value = calcario.A.acrescimoCa.toFixed(2);
+  input_acrescimoMg_a.value = calcario.A.acrescimoMg.toFixed(2);
+  input_pn_a.value = calcario.A.PN.toFixed(2);
+
+  input_ca_b.value = calcario.B.Ca.toFixed(2);
+  input_mg_b.value = calcario.B.Mg.toFixed(2);
+  input_prnt_b.value = calcario.B.PRNT.toFixed(2);
+  input_acrescimoCa_b.value = calcario.B.acrescimoCa.toFixed(2);
+  input_acrescimoMg_b.value = calcario.B.acrescimoMg.toFixed(2);
+  input_pn_b.value = calcario.B.PN.toFixed(2);
+
+  return { cao_a, mgo_a, cao_b, mgo_b };
+}

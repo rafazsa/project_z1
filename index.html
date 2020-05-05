@@ -28,22 +28,22 @@
               <tr>
                 <th scope="col">Calcário</th>
                 <th scope="col">CaO / 1000</th>
-                <th scope="col">Mgo / 1000</th>
+                <th scope="col">MgO / 1000</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <th scope="row">A</th>
-                <td><input type="text" name="cao_a" /></td>
-                <td><input type="text" name="mgo_a" /></td>
+                <td><input type="text" name="cao_a" disabled /></td>
+                <td><input type="text" name="mgo_a" disabled /></td>
               </tr>
               <tr>
                 <th scope="row">B</th>
                 <td>
-                  <input type="text" name="cao_b" />
+                  <input type="text" name="cao_b" disabled />
                 </td>
                 <td>
-                  <input type="text" name="mgo_b" />
+                  <input type="text" name="mgo_b" disabled />
                 </td>
               </tr>
             </tbody>
@@ -60,7 +60,7 @@
                 <th scope="col">PRNT %</th>
                 <th scope="col">Acréscimo de Ca %</th>
                 <th scope="col">Acréscimo de Mg %</th>
-                <th scope="col">Acréscimo de PN %</th>
+                <th scope="col">PN %</th>
               </tr>
             </thead>
             <tbody>
@@ -69,18 +69,18 @@
                 <td><input type="text" name="ca_a" /></td>
                 <td><input type="text" name="mg_a" /></td>
                 <td><input type="text" name="prnt_a" /></td>
-                <td><input type="text" name="acrescimo_ca_a" /></td>
-                <td><input type="text" name="acrescimo_mg_a" /></td>
-                <td><input type="text" name="acrescimo_pn_a" /></td>
+                <td><input type="text" name="acrescimo_ca_a" disabled /></td>
+                <td><input type="text" name="acrescimo_mg_a" disabled /></td>
+                <td><input type="text" name="pn_a" disabled /></td>
               </tr>
               <tr>
                 <th scope="row">B</th>
                 <td><input type="text" name="ca_b" /></td>
                 <td><input type="text" name="mg_b" /></td>
                 <td><input type="text" name="prnt_b" /></td>
-                <td><input type="text" name="acrescimo_ca_b" /></td>
-                <td><input type="text" name="acrescimo_mg_b" /></td>
-                <td><input type="text" name="acrescimo_pn_b" /></td>
+                <td><input type="text" name="acrescimo_ca_b" disabled /></td>
+                <td><input type="text" name="acrescimo_mg_b" disabled /></td>
+                <td><input type="text" name="pn_b" disabled /></td>
               </tr>
             </tbody>
           </table>
@@ -89,12 +89,13 @@
 
       <div class="row">
         <div class="col-sm-3">
+          <br />
           <div class="input-group row align-items-center">
             <label
               style="margin-bottom: 0rem !important;"
               class="col-sm-5"
               for="funcao_ca"
-              ><b>Função Ca</b></label
+              >Função Ca</label
             >
             <input
               class="col-sm-5"
@@ -108,7 +109,7 @@
               style="margin-bottom: 0rem !important;"
               class="col-sm-5"
               for="funcao_ca"
-              ><b>Função Mg</b></label
+              >Função Mg</label
             >
             <input
               class="col-sm-5"
@@ -117,16 +118,19 @@
               id="funcao_mg"
             />
           </div>
+          <br />
+          <div class="input-group align-center">
+            <button class="btn btn-calcular">Calcular</button>
+          </div>
         </div>
         <div class="col-sm-9">
-          <table class="table">
+          <table id="table_calc" class="table">
             <thead class="thead-dark">
               <tr>
-                <th> </th>
+                <th></th>
                 <th colspan="2">Delta</th>
                 <th colspan="2">Alvo</th>
                 <th colspan="2">Aplicar (Tonelada) (PRNT100%)</th>
-                <th> </th>
               </tr>
               <tr>
                 <th>Nome</th>
@@ -136,7 +140,6 @@
                 <th>MgO</th>
                 <th>A</th>
                 <th>B</th>
-                <th>Função Objetivo</th>
               </tr>
             </thead>
             <tbody>
@@ -148,7 +151,6 @@
                 <td>0,6</td>
                 <td>1500</td>
                 <td>400</td>
-                <td>1</td>
               </tr>
             </tbody>
           </table>
@@ -170,7 +172,7 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
       crossorigin="anonymous"
     ></script>
+    <script src="https://unpkg.com/javascript-lp-solver/prod/solver.js"></script>
     <script src="js/solver.js"></script>
-<script src="https://unpkg.com/javascript-lp-solver/prod/solver.js"></script>
   </body>
 </html>

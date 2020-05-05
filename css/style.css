@@ -1,11 +1,10 @@
 body {
   max-width: 100%;
-  background-color: lightgray;
+  background-color: darksalmon;
 }
 
 .container {
   margin-top: 10px;
-  background-color: white;
 }
 input {
   width: 100%;
@@ -28,10 +27,17 @@ table {
   font-size: 9px;
 }
 
-th,td {
+th,
+td {
   text-align: center;
 }
 
 .center {
   text-align: center;
+}
+
+.btn-calcular {
+  background: #343a40 !important;
+  color: rgb(255, 255, 255) !important;
+  width: 100%;
 }
