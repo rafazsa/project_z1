@@ -41,3 +41,7 @@ td {
   color: rgb(255, 255, 255) !important;
   width: 100%;
 }
+
+.feasible {
+  background-color: rgba(81, 255, 0, 0.179);
+}

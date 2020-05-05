@@ -1,16 +1,37 @@
 const button_calcular = document.querySelector("button");
+const load_file = document.querySelector("input#excel");
 
 // Carrega todos os inputs da pagina
 updateAll();
 
-// _______________ Eventos ______________
-button_calcular.onclick = () => {
-  execSolve();
-};
-
 document.querySelectorAll("input").forEach((el) => {
   el.onchange = () => updateAll();
 });
+// _______________ Eventos ______________
+button_calcular.onclick = () => {
+  addSolverResults();
+};
+
+load_file.onchange = (e) => {
+  const reader = new window.FileReader();
+
+  reader.readAsArrayBuffer(e.target.files[0]);
+
+  reader.onload = function (e) {
+    const data = new window.Uint8Array(reader.result);
+
+    const wb = window.XLSX.read(data, { type: "array" });
+
+    var result = {};
+    wb.SheetNames.forEach(function (sheetName) {
+      var roa = window.XLSX.utils.sheet_to_json(wb.Sheets[sheetName], {
+        header: 1,
+      });
+      if (roa.length) result[sheetName] = roa;
+    });
+    fillTable(result);
+  };
+};
 
 // _______________ Funções ___________
 function execSolve(delta_cao, delta_mgo) {
@@ -45,17 +66,24 @@ function execSolve(delta_cao, delta_mgo) {
   const result = solver.Solve(model);
 
   const { feasible } = result.midpoint;
-
+  let a = 0;
+  let b = 0;
   // Se existir uma resposta ótima
   if (feasible) {
-    const a = result.midpoint.aplicar_a;
-    const b = result.midpoint.aplicar_b;
-    console.log(`A: ${a} | B: ${b}`);
+    a = result.midpoint.aplicar_a;
+    b = result.midpoint.aplicar_b;
   } else {
-    const a = result.ranges.aplicar_a.min;
-    const b = result.ranges.aplicar_b.min;
-    console.log(`A: ${a} | B: ${b}`);
+    a = result.ranges.aplicar_a.min;
+    b = result.ranges.aplicar_b.min;
   }
+
+  return {
+    feasible,
+    a,
+    b,
+    alvo_cao: a * cao_a + b * cao_b,
+    alvo_mgo: a * mgo_a + b * mgo_b,
+  };
 }
 
 function updateAll() {
@@ -141,4 +169,47 @@ function updateAll() {
   input_pn_b.value = calcario.B.PN.toFixed(2);
 
   return { cao_a, mgo_a, cao_b, mgo_b };
+}
+
+function readXlsx() {}
+
+function fillTable(data) {
+  const tbody = document.querySelector("#tbody_calc");
+
+  for (let i = 1; i < data.Planilha1.length; i++) {
+    let row = tbody.insertRow(-1);
+
+    console.log(data.Planilha1[i][0]);
+    row.insertCell(0).innerHTML = `<b>${data.Planilha1[i][0]}</b>`;
+    row.insertCell(1).innerHTML = data.Planilha1[i][1].toFixed(2);
+    row.insertCell(2).innerHTML = data.Planilha1[i][2].toFixed(2);
+  }
+}
+
+function addSolverResults() {
+  const rows = document.querySelector("#tbody_calc").rows;
+
+  for (row of rows) {
+    const prnt_a = parseFloat(
+      document.querySelector('input[name="prnt_a"]').value
+    );
+    const prnt_b = parseFloat(
+      document.querySelector('input[name="prnt_b"]').value
+    );
+    const delta_cao = parseFloat(row.cells[1].innerHTML);
+    const delta_mgo = parseFloat(row.cells[2].innerHTML);
+    const { a, b, alvo_cao, alvo_mgo, feasible } = execSolve(
+      delta_cao,
+      delta_mgo
+    );
+
+    if (feasible) row.className += " feasible";
+
+    row.insertCell().innerHTML = alvo_cao.toFixed(2);
+    row.insertCell().innerHTML = alvo_mgo.toFixed(2);
+    row.insertCell().innerHTML = a.toFixed(4);
+    row.insertCell().innerHTML = b.toFixed(4);
+    row.insertCell().innerHTML = ((a / prnt_a) * 1000).toFixed(0);
+    row.insertCell().innerHTML = ((b / prnt_b) * 1000).toFixed(0);
+  }
 }

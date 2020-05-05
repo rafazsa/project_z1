@@ -121,6 +121,7 @@
           <br />
           <div class="input-group align-center">
             <button class="btn btn-calcular">Calcular</button>
+            <input class="form-control" type="file" name="excel" id="excel" />
           </div>
         </div>
         <div class="col-sm-9">
@@ -145,19 +146,7 @@
                 <th>B</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th>A001</th>
-                <td>1,5</td>
-                <td>0,6</td>
-                <td>1,5</td>
-                <td>0,6</td>
-                <td>1500</td>
-                <td>400</td>
-                <td>1500</td>
-                <td>400</td>
-              </tr>
-            </tbody>
+            <tbody id="tbody_calc"></tbody>
           </table>
         </div>
       </div>
@@ -177,6 +166,7 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
       crossorigin="anonymous"
     ></script>
+    <script src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/javascript-lp-solver/prod/solver.js"></script>
     <script src="js/solver.js"></script>
   </body>
