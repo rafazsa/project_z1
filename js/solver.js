@@ -193,8 +193,20 @@ function fillTable(data) {
 
 function addSolverResults() {
   const rows = document.querySelector("#tbody_calc").rows;
+
   const jsonResult = [["Nome", "A", "B"]];
   for (row of rows) {
+    // Reset the cells to update
+    if (row.cells.length > 3) {
+      row.deleteCell(3);
+      row.deleteCell(3);
+      row.deleteCell(3);
+      row.deleteCell(3);
+      row.deleteCell(3);
+      row.deleteCell(3);
+      row.className = "";
+    }
+
     const prnt_a = parseFloat(
       document.querySelector('input[name="prnt_a"]').value / 100
     );
