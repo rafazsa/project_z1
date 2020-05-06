@@ -1,5 +1,6 @@
 const button_calcular = document.querySelector("button");
 const load_file = document.querySelector("input#excel");
+const button_salvar = document.querySelector("#salvar");
 
 // Carrega todos os inputs da pagina
 updateAll();
@@ -10,6 +11,10 @@ document.querySelectorAll("input").forEach((el) => {
 // _______________ Eventos ______________
 button_calcular.onclick = () => {
   addSolverResults();
+};
+
+button_salvar.onclick = () => {
+  exportResults();
 };
 
 load_file.onchange = (e) => {
@@ -118,27 +123,29 @@ function updateAll() {
 
   const funcao_ca = parseFloat(input_funcao_ca.value) || 1.784799244;
   const funcao_mg = parseFloat(input_funcao_mg.value) || 2.483274779;
-  const Ca_a = parseFloat(input_ca_a.value) || 0.29;
-  const Mg_a = parseFloat(input_mg_a.value) || 0.19;
-  const Ca_b = parseFloat(input_ca_b.value) || 0.45;
-  const Mg_b = parseFloat(input_mg_b.value) || 0.03;
+  const Ca_a = parseFloat(input_ca_a.value) / 100 || 0.32;
+  const Mg_a = parseFloat(input_mg_a.value) / 100 || 0.14;
+  const Ca_b = parseFloat(input_ca_b.value) / 100 || 0.45;
+  const Mg_b = parseFloat(input_mg_b.value) / 100 || 0.035;
+  const prnt_a = parseFloat(input_prnt_a.value) / 100 || 0.85;
+  const prnt_b = parseFloat(input_prnt_b.value) / 100 || 0.85;
 
   const calcario = {
     A: {
       Ca: Ca_a,
       Mg: Mg_a,
-      PRNT: 0.75,
+      PRNT: prnt_a,
       acrescimoCa: Ca_a * funcao_ca,
       acrescimoMg: Mg_a * funcao_mg,
-      PN: 0.9864,
+      PN: Ca_a * funcao_ca + Mg_a * funcao_mg,
     },
     B: {
       Ca: Ca_b,
       Mg: Mg_b,
-      PRNT: 0.75,
+      PRNT: prnt_b,
       acrescimoCa: Ca_b * funcao_ca,
       acrescimoMg: Mg_b * funcao_mg,
-      PN: 0.8777,
+      PN: Ca_b * funcao_ca + Mg_b * funcao_mg,
     },
   };
   const cao_a = (calcario.A.PRNT / calcario.A.PN) * calcario.A.acrescimoCa;
@@ -154,24 +161,22 @@ function updateAll() {
   input_mgo_a.value = mgo_a.toFixed(2);
   input_mgo_b.value = mgo_b.toFixed(2);
 
-  input_ca_a.value = calcario.A.Ca.toFixed(2);
-  input_mg_a.value = calcario.A.Mg.toFixed(2);
-  input_prnt_a.value = calcario.A.PRNT.toFixed(2);
-  input_acrescimoCa_a.value = calcario.A.acrescimoCa.toFixed(2);
-  input_acrescimoMg_a.value = calcario.A.acrescimoMg.toFixed(2);
-  input_pn_a.value = calcario.A.PN.toFixed(2);
+  input_ca_a.value = (100 * calcario.A.Ca).toFixed(2);
+  input_mg_a.value = (100 * calcario.A.Mg).toFixed(2);
+  input_prnt_a.value = (100 * calcario.A.PRNT).toFixed(2);
+  input_acrescimoCa_a.value = (100 * calcario.A.acrescimoCa).toFixed(2);
+  input_acrescimoMg_a.value = (100 * calcario.A.acrescimoMg).toFixed(2);
+  input_pn_a.value = (100 * calcario.A.PN).toFixed(2);
 
-  input_ca_b.value = calcario.B.Ca.toFixed(2);
-  input_mg_b.value = calcario.B.Mg.toFixed(2);
-  input_prnt_b.value = calcario.B.PRNT.toFixed(2);
-  input_acrescimoCa_b.value = calcario.B.acrescimoCa.toFixed(2);
-  input_acrescimoMg_b.value = calcario.B.acrescimoMg.toFixed(2);
-  input_pn_b.value = calcario.B.PN.toFixed(2);
+  input_ca_b.value = (100 * calcario.B.Ca).toFixed(2);
+  input_mg_b.value = (100 * calcario.B.Mg).toFixed(2);
+  input_prnt_b.value = (100 * calcario.B.PRNT).toFixed(2);
+  input_acrescimoCa_b.value = (100 * calcario.B.acrescimoCa).toFixed(2);
+  input_acrescimoMg_b.value = (100 * calcario.B.acrescimoMg).toFixed(2);
+  input_pn_b.value = (100 * calcario.B.PN).toFixed(2);
 
   return { cao_a, mgo_a, cao_b, mgo_b };
 }
-
-function readXlsx() {}
 
 function fillTable(data) {
   const tbody = document.querySelector("#tbody_calc");
@@ -188,13 +193,13 @@ function fillTable(data) {
 
 function addSolverResults() {
   const rows = document.querySelector("#tbody_calc").rows;
-
+  const jsonResult = [["Nome", "A", "B"]];
   for (row of rows) {
     const prnt_a = parseFloat(
-      document.querySelector('input[name="prnt_a"]').value
+      document.querySelector('input[name="prnt_a"]').value / 100
     );
     const prnt_b = parseFloat(
-      document.querySelector('input[name="prnt_b"]').value
+      document.querySelector('input[name="prnt_b"]').value / 100
     );
     const delta_cao = parseFloat(row.cells[1].innerHTML);
     const delta_mgo = parseFloat(row.cells[2].innerHTML);
@@ -202,6 +207,15 @@ function addSolverResults() {
       delta_cao,
       delta_mgo
     );
+
+    let calagem_a = (a / prnt_a) * 1000;
+    let calagem_b = (b / prnt_b) * 1000;
+
+    jsonResult.push([
+      row.cells[0].innerHTML.replace("<b>", "").replace("</b>", ""),
+      calagem_a.toFixed(0),
+      calagem_b.toFixed(0),
+    ]);
 
     if (feasible) row.className += " feasible";
 
@@ -215,7 +229,46 @@ function addSolverResults() {
 
     row.insertCell().innerHTML = `<b>${a.toFixed(4)}</b>`;
     row.insertCell().innerHTML = `<b>${b.toFixed(4)}</b>`;
-    row.insertCell().innerHTML = ((a / prnt_a) * 1000).toFixed(0);
-    row.insertCell().innerHTML = ((b / prnt_b) * 1000).toFixed(0);
+    row.insertCell().innerHTML = calagem_a.toFixed(0);
+    row.insertCell().innerHTML = calagem_b.toFixed(0);
   }
+  localStorage.setItem("export", JSON.stringify(jsonResult));
+
+  const button_salvar = document.querySelector("#salvar");
+
+  button_salvar.removeAttribute("disabled");
+}
+
+function exportResults() {
+  const wb = window.XLSX.utils.book_new();
+
+  wb.Props = {
+    Title: "Limestone_Association",
+    Subject: "Powered by Tsuyoshi Co.",
+    Author: "Diego Tsuyoshi",
+    CreatedDate: new Date(),
+  };
+
+  const data = JSON.parse(localStorage.getItem("export"));
+  const ws = window.XLSX.utils.aoa_to_sheet(data);
+
+  window.XLSX.utils.book_append_sheet(wb, ws, "Calcário");
+
+  const wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+  const nameFile = `LA_${new Date()
+    .toLocaleDateString("pt-br", { hour: "2-digit", minute: "2-digit" })
+    .replace(/\/|\:/g, "-")
+    .replace(" ", "_")}`;
+  function s2ab(s) {
+    const buf = new ArrayBuffer(s.length);
+    const view = new Uint8Array(buf);
+
+    for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff;
+
+    return buf;
+  }
+  window.saveAs(
+    new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
+    `${nameFile}.xlsx`
+  );
 }
