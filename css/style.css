@@ -52,4 +52,5 @@ td {
   max-width: 10px;
   background-color: rgba(81, 255, 0, 0.179);
   border-radius: 50%;
+  border: 1px solid;
 }
